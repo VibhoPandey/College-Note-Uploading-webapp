@@ -1,0 +1,54 @@
+services:
+  # ── Backend: FastAPI ──────────────────────────────────────────────
+  - type: web
+    name: college-notes-api
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./college_notes.db          # persistent disk not available on free; use Supabase DB for prod
+      - key: JWT_SECRET_KEY
+        generateValue: true                           # Render auto-generates a random secret
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "480"
+      - key: MAX_UPLOAD_SIZE_MB
+        value: "10"
+      # Set these in the Render dashboard (Environment tab) — do NOT commit real values here
+      - key: FRONTEND_ORIGIN
+        value: https://college-notes-hub.onrender.com  # update after frontend deploys
+      - key: SUPABASE_URL
+        sync: false          # fill in Render dashboard
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false          # fill in Render dashboard
+      - key: SUPABASE_STORAGE_BUCKET
+        value: notes
+      - key: ADMIN_EMAIL
+        sync: false          # fill in Render dashboard
+
+  # ── Frontend: Vite static site ────────────────────────────────────
+  - type: web
+    name: college-notes-hub
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://college-notes-api.onrender.com/api  # update if your backend name differs
