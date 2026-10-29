@@ -1,3 +1,4 @@
+
 # College Notes Hub
 
 College Notes Hub is a responsive HTML/CSS/TypeScript frontend backed by FastAPI. It supports JWT authentication, PDF upload/download, searchable approved notes, bookmarks, personal uploads, profile updates, dashboard counts, and administrator moderation.
@@ -23,3 +24,6 @@ Register a student account, upload a valid PDF, provision an admin by setting `A
 ## Limitations
 
 The deadline-oriented MVP persists files locally when Supabase credentials are absent and switches to private Supabase Storage with 60-second signed download URLs when configured. There is no email verification, password reset, rate limiter, or embedded preview pane; browsers preview downloaded PDFs normally. See `backend/.env.example` for all required production settings.
+
+# College-Note-Uploading-webapp
+
