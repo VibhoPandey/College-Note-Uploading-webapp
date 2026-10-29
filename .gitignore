@@ -1,0 +1,9 @@
+backend/.env
+frontend/.env
+backend/.venv/
+backend/college_notes.db
+backend/uploads/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
